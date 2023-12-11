@@ -3,7 +3,7 @@
 repo_root="/home/dipeshkr/repos/bytetok-nmt/src"
 
 # Use this for a group of experiments
-base_exp_dir="../temp3/en-de/factorizer-en/"   
+base_exp_dir="../temp4/en-de/factorizer-en/"   
 
 # use this for variation within each group of experiments
 exp_dir_name="fac770-bpe8k"
@@ -66,7 +66,7 @@ if [ $shared -eq 1 ]; then
 else
     # echo "Tested Earlier"
     python -m make_conf -n prep.yml -w $exp_dir -c $base_prep_file -r $repo_root \
-            --kwargs max_src_types=$sz max_tgt_types=$sz \
+            --kwargs max_src_types=$vocab_size max_tgt_types=$vocab_size \
                     src_pieces=$src_pieces tgt_pieces=$tgt_pieces \
                     src_factorizer=$src_factorizer tgt_factorizer=$tgt_factorizer
 fi
