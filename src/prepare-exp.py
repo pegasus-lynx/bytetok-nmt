@@ -11,10 +11,8 @@ from nlcodec import Type
 from rtg.data.dataset import TSVData, SqliteFile
 
 from lib.misc import read_conf, make_dir, make_file, uniq_reader_func
-from nlcodec.codec import MWE_MIN_FREQ, get_scheme
+from nlcodec.codec import get_scheme
 
-if __init__ == "__main__":
-    main()
 
 def main():
     args = parse_args()
@@ -55,8 +53,8 @@ def prepare_experiment(configs, work_dir):
     }
 
     factorizer_models = {
-        'src' : configs.get('src_factorizer', None)
-        'tgt' : configs.get('tgt_factorizer', None)
+        'src' : configs.get('src_factorizer', None),
+        'tgt' : configs.get('tgt_factorizer', None),
         'share' : configs.get('shared_factorizer', None)
     }
 
@@ -90,8 +88,9 @@ def prepare_experiment(configs, work_dir):
 
     data_flag = work_dir / Path('_DATA')
     if not data_flag.exists():
-        prepare_data(train_files, val_files, vocab_files, pieces,
-            shared, configs['src_len'], configs['tgt_len'],
+        prepare_data(train_files, val_files, vocab_files,
+            factorizer_models, pieces, shared,
+            configs['src_len'], configs['tgt_len'],
             configs['truncate'], data_dir)
         make_file(data_flag)
 
@@ -151,3 +150,6 @@ def prepare_data(train_files:Dict[str, Path], val_files:Dict[str, Path],
     TSVData.write_parallel_recs(recs, work_dir / Path('valid.tsv.gz'))
 
     return
+
+if __name__ == "__main__":
+    main()
