@@ -164,3 +164,4 @@ cython_debug/
 /datasets/*
 /factorizer-models/*
 /temp*/*
+!/src/lib
