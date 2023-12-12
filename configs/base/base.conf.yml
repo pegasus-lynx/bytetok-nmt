@@ -1,5 +1,5 @@
 model_args: # model construction args
-  src_vocab: 770
+  src_vocab: 794
   tgt_vocab: 8000
   enc_layers: 6
   dec_layers: 6

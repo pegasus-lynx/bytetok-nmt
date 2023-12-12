@@ -3,10 +3,10 @@
 repo_root="/home/dipeshkr/repos/bytetok-nmt/src"
 
 # Use this for a group of experiments
-base_exp_dir="../temp4/en-de/factorizer-en/"   
+base_exp_dir="../temp10/en-de/factorizer-en/"   
 
 # use this for variation within each group of experiments
-exp_dir_name="fac770-bpe8k"
+exp_dir_name="fac795-bpe8k"
 
 # Config files to be used for preparing and running the experiments
 base_conf_file="../configs/base/base.conf.yml"
@@ -84,10 +84,11 @@ else
 fi
 
 # 4. Running experiments
-# CUDA_VISIBLE_DEVICES=$cuda_device, rtg-pipe $exp_dir -G
-# rtg-pipe $exp_dir -G
+CUDA_VISIBLE_DEVICES=$cuda_device, rtg-pipe $exp_dir -G
+# rtg-pipe $exp_dir
 
 # # 5. Decode tests
+decode_tests_deen $exp_dir $cuda_device
 
 # if [ $shared -eq 1 ]; then
 #     decode_tests_deen $exp_dir $cuda_device

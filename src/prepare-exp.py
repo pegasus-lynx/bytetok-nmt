@@ -82,8 +82,9 @@ def prepare_experiment(configs, work_dir):
 
     vcb_flag = work_dir / Path('_VOCABS')
     if not vcb_flag.exists():
-        prepare_vocabs(train_files, vocab_files, 
-                pieces, shared, vocab_sizes)
+        prepare_vocabs(train_files, vocab_files,
+                factorizer_models, pieces,
+                shared, vocab_sizes)
         make_file(vcb_flag)
 
     data_flag = work_dir / Path('_DATA')
@@ -103,7 +104,8 @@ def prepare_experiment(configs, work_dir):
 
 
 def prepare_vocabs(train_files:Dict[str,Path], 
-        vocab_files:Dict[str,Path], pieces:Dict[str,str], 
+        vocab_files:Dict[str,Path], 
+        factorizer_models:Dict[str,int], pieces:Dict[str,str], 
         shared:bool, vocab_sizes:Dict[str,int]):
     
     keys = ['shared'] if shared else ['src', 'tgt']
@@ -115,13 +117,17 @@ def prepare_vocabs(train_files:Dict[str,Path],
             corp = uniq_reader_func(train_files[key])
 
         vocab = scheme.learn(corp, vocab_size=vocab_sizes[key])
-        Type.write_out(vocab, vocab_files[key])
+        if pieces[key] == 'factorizer':
+            Type.write_out(vocab, vocab_files[key], scheme=pieces[key], 
+                            factorizer_model=factorizer_models[key])
+        else:
+            Type.write_out(vocab, vocab_files[key], scheme=pieces[key])
 
 def prepare_data(train_files:Dict[str, Path], val_files:Dict[str, Path], 
             vocab_files:Dict[str, Path], factorizer_models:Dict[str,int], 
             pieces:Dict[str, str], shared:bool, src_len:int, tgt_len:int, 
             truncate:bool, work_dir:Path):
-
+    print("Preparing Data")
     codecs = {}
     for key, fpath in vocab_files.items():
         scheme = get_scheme(pieces[key])

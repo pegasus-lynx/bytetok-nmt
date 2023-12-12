@@ -7,7 +7,7 @@ src_len: 512
 tgt_len: 512
 shared: False
 # max_types: 4000
-max_src_types: 770
+max_src_types: 794
 max_tgt_types: 8000
 # pieces: ngram
 src_pieces: factorizer
