@@ -53,12 +53,19 @@ def eval_file(detok_hyp:Path, ref:Path, lowercase=True):
     from sacrebleu import corpus_bleu, corpus_chrf, BLEU
     # detoks = IO.get_lines(detok_hyp)
     # refs = [IO.get_lines(ref) if isinstance(ref, Path) else ref]
-    
-    detoks = [x for x in IO.get_lines(detok_hyp)]
-    refs = [x for x in IO.get_lines(ref)]
-    
-    bleu = corpus_bleu(detoks, [refs], lowercase=lowercase)
-    chrf2 = corpus_chrf(detoks, [refs], beta=2)
+    try:
+        detoks = [x for x in IO.get_lines(detok_hyp)]
+        refs = [x for x in IO.get_lines(ref)]
+        
+        bleu = corpus_bleu(detoks, [refs], lowercase=lowercase)
+        chrf2 = corpus_chrf(detoks, [refs], beta=2)
+    except:
+        print(detoks)
+        print(refs)
+        print("---------------------------")
+        bleu = 0
+        chrf2 = 0
+
     return bleu, chrf2
     # bleu_str = bleu.format()
     # log(f'BLEU {detok_hyp} : {bleu_str}',2)
