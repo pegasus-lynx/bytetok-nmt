@@ -51,20 +51,12 @@ def write_conf(configs_dict:Dict, output_file:Filepath, conf_type:str='yaml'):
 
 def eval_file(detok_hyp:Path, ref:Path, lowercase=True):
     from sacrebleu import corpus_bleu, corpus_chrf, BLEU
-    # detoks = IO.get_lines(detok_hyp)
-    # refs = [IO.get_lines(ref) if isinstance(ref, Path) else ref]
-    try:
-        detoks = [x for x in IO.get_lines(detok_hyp)]
-        refs = [x for x in IO.get_lines(ref)]
-        
-        bleu = corpus_bleu(detoks, [refs], lowercase=lowercase)
-        chrf2 = corpus_chrf(detoks, [refs], beta=2)
-    except:
-        print(detoks)
-        print(refs)
-        print("---------------------------")
-        bleu = 0
-        chrf2 = 0
+
+    detoks = [x for x in IO.get_lines(detok_hyp)]
+    refs = [x for x in IO.get_lines(ref)]
+    
+    bleu = corpus_bleu(detoks, [refs], lowercase=lowercase)
+    chrf2 = corpus_chrf(detoks, [refs], beta=2)
 
     return bleu, chrf2
     # bleu_str = bleu.format()

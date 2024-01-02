@@ -30,7 +30,7 @@ optim:
 prep: # data preparation
   codec_lib: nlcodec
   char_coverage: 0.9995
-  max_src_types: 8000
+  max_src_types: 794
   max_tgt_types: 8000
   #max_types: 32000
   pieces: bpe   # choices: bpe, char, word, unigram  from google/sentencepiece

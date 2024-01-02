@@ -117,7 +117,7 @@ def prepare_vocabs(train_files:Dict[str,Path],
             corp = uniq_reader_func(train_files[key])
 
         vocab = scheme.learn(corp, vocab_size=vocab_sizes[key])
-        if pieces[key] == 'factorizer':
+        if pieces[key] in ['factorizer', 'factorizer266'] :
             Type.write_out(vocab, vocab_files[key], scheme=pieces[key], 
                             factorizer_model=factorizer_models[key])
         else:
@@ -133,7 +133,7 @@ def prepare_data(train_files:Dict[str, Path], val_files:Dict[str, Path],
         scheme = get_scheme(pieces[key])
         if fpath.exists():
             table, _ = Type.read_vocab(fpath)
-            if pieces[key] == "factorizer":
+            if pieces[key] in ["factorizer", "factorizer266"]:
                 codecs[key] = scheme(table=table, 
                                     factorizer_model=factorizer_models[key])
             else:
