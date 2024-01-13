@@ -34,6 +34,7 @@ To be completed
 
 For this you can use the `fetch-factorizer` script, which takes in the list of languages and optionally a path to download the factorizer models.
 If you don't provide the path for downloading the models, the script automtically loads a path from the `repo_setup.env`.
+
 > Preferably setup the path in repo_setup.env because it will be used in multiple scripts.
 
 ```
@@ -65,29 +66,58 @@ Examples:
 
 #### Fetching Datasets 
 
+We use `mtdata` to download the datasets and then tokenize them using `sacremoses`. Also, there are various configurations that we can do with any of these processes.
+
+In the script `fetch-datasets`, I have tried to combine these processes together with the configuration that we are using for these experiments.. The script only supports downloading `deu-eng` dataset for now. We will add more as we go on.
+
+> For customizing the download location, preferably setup the path in repo_setup.env because it will be used in multiple scripts.
+
+```
+./fetch-datasets.sh -h
+
+fetch-datasets : Downloads the factorizer models
+
+Syntax: fetch-datasets [OPTIONS] l1-l2
+
+Options:
+  -h                 Print this Help.
+
+  -p <value>         Path to directory where factorizer models will be installed
+                     DEFAULT - ./factorizer-models
+                     The default value is loaded from repo_setup.env file
+
+  l1-l2              Language pair for downloading the datasets.
+                     This uses mtdata for downloading the datasets, however
+                          that requires some confgurations.
+                     Here is a list of pairs with preconfigured options :
+                          deu-eng, eng-deu
+                     If there is any other name or wrong argument passed, it is ignored
+
+Examples:
+ ./fetch-datasets.sh deu-eng
+ ./fetch-datasets.sh -p ./data deu-eng
+```
 
 ### Running Experiments
 
 ### Steps to run the run-factorizer.sh script
 
-PS: Adding factorizer-models in repo-root is easiest as the config files are already configured to that.
+> These scripts pick the default paths for factorizer, data and configs from `repo-setup.env`. Feel free to change them for your setup, or provide the paths while running the scripts.
+> Enable execution for all the scripts using `chmod +x`
 
 1. Change directory to repo root: `cd ..\<repo-path>\bytetok-nmt`
-2. `mkdir factorizer-models`
-3. Download the factorizer models:
-```
-    cd factorizer-models
-    wget https://github.com/ltgoslo/factorizer/releases/download/v1.0.0/english.dawg
-``` 
+2. Run the `fetch-factorizer` script to download the factorizer models
+    ```
+        ./fetch-factorizer.sh deu-eng
+    ``` 
 
-4. Setup data directory
-```
-<!-- For getting new data -->
-mtdata get -l deu-eng --out ./datasets/deu-eng --merge --train Statmt-europarl-10-deu-eng Statmt-news_commentary-16-deu-eng --dev Statmt-newstest_deen-2017-deu-eng  --test Statmt-newstest_deen-20{18,19,20}-deu-eng
-```
+3. Run the `featch-datasets` script to download the dataset ( supports deu-eng at this moment ). For extending for other language pairs check the commands in deu-eng case. 
+    ```
+        ./fetch-datasets.sh deu-eng
+    ```
 
-5. Setup paths in base config file. These paths are relative to `$repo_root\src`
+4. Setup paths in base config file. These paths are relative to `$repo_root\src`
 
-6. Setup parameters in `run-factorizer.sh`.
-7. `chmod +x run-factorizer.sh`
-8. `.\run-factorizer.sh`
+5. Setup parameters in `run-factorizer.sh`.
+6. `chmod +x run-factorizer.sh`
+7. `.\run-factorizer.sh`
