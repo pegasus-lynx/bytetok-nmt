@@ -1,28 +1,72 @@
 # bytetok-nmt
 
+This repo aims at running NMT experiments using [Factorizer]() models.
+We use custom version of [NLCodec] and [RTG] library to run the NMT experiments. 
 
-### Things to clarify
+### Setting Up Environment
 
-- [] Should we use tokenized file for sources ?
+First of all, setup a virtual environment using `venv` or `conda` whichever you prefer. I use `venv` for making and managing virtual environments. So, here are the steps you can use to create the environment using `venv` :
 
-### Task Items
-
-- [x] Add configs
-- [] Give access.
-- [] Add run script.
-- [x] Inform about nvidia installs on system.
-- [x] Check if we have old data
-
-
-### Setting up environment
 ```
+# Creating a python enviroment
 python -m venv <path-to-env>
+
+# Activating the environment
 source <path-to-env>\bin\activate
+```
+
+Now, that once you have the new environment in place, here is how we can install the python packages required for running the experiments.
+
+#### 1. Using requirements.txt
+```
 pip install -r requirements.txt
 ```
-One thing to note is, while setting up the environment, many nvidia packages were installed. Please, take a look if they will be needed or not. 
-Easiest thing would be to just run pip install and check if it is making some uninstalls, and if it is, then verify if the test is still running or not. This is just for precaution.
+**NOTE :** Before running the command above take a look at the nvidia packages that will be installed. It may be possible, that these may be the latest versions and not compatible with the GPUs. However, this should not present any major issues. 
 
+
+#### 2. Manual Setup
+To be completed
+
+
+### Setting up Models, Datasets for running experiments
+
+#### Fetching Factorizer Models
+
+For this you can use the `fetch-factorizer` script, which takes in the list of languages and optionally a path to download the factorizer models.
+If you don't provide the path for downloading the models, the script automtically loads a path from the `repo_setup.env`.
+> Preferably setup the path in repo_setup.env because it will be used in multiple scripts.
+
+```
+./fetch-factorizer.sh -h
+
+fetch-factorizer : Downloads the factorizer models
+
+Syntax: fetch-factorizer [OPTIONS] lang1 lang2 lang3 ...
+
+Options:
+  -h                 Print this Help.
+
+  -p <value>         Path to directory where factorizer models will be installed
+                     DEFAULT - ./factorizer-models
+                     The default value is loaded from repo_setup.env file
+
+  lang*              List of languages for which the pretrained models are
+                      to be downloaded. Here is the list of all the pretrained
+                      models available :
+                          arabic, chinese, czech, english,
+                          norwegian, gaelic, turkish
+                     If there is any other name or wrong argument passed, it is ignored
+
+Examples:
+ ./fetch-factorizer.sh english turkish chinese
+ ./fetch-factorizer.sh -p ./factorizers english turkish chinese
+
+```
+
+#### Fetching Datasets 
+
+
+### Running Experiments
 
 ### Steps to run the run-factorizer.sh script
 

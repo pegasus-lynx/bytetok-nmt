@@ -159,9 +159,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# lib directories are ignored above as part of Python extras, 
+#   therefore including src/lib for where we have our modules
+!/src/lib
 
 # Remove data directories
 /datasets/*
 /factorizer-models/*
-/temp*/*
-!/src/lib
+/exps/*
