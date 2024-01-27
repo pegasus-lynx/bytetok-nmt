@@ -14,7 +14,7 @@ help() {
     echo "  -h                 Print this Help."
     echo    
     echo "  -p <value>         Path to directory where factorizer models will be installed"
-    echo "                     DEFAULT - ./factorizer-models"
+    echo "                     DEFAULT - ./datasets"
     echo "                     The default value is loaded from repo_setup.env file"
     echo
     echo "  l1-l2              Language pair for downloading the datasets."

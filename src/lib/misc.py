@@ -79,6 +79,102 @@ def uniq_reader_func(*args) -> Iterator[str]:
                 recs.add(line)
     return recs
 
+class ConfBuilder(object):
+
+    def __init__(self, conf_file:Filepath, conf_type:str='yaml'):
+        self.conf_file = Path(conf_file)
+        self.conf_type = conf_type
+        self.configs = None
+
+    def read(self):
+        if self.conf_type in ['yml', 'yaml']:
+            self._read_yaml()
+
+        if self.conf_type in ['json']:
+            self._read_json()
+
+        if self.configs is None:
+            self.configs = dict()
+        
+        return
+
+    def save(self, out_file:Filepath, conf_type:str=None):
+        out_path = Path(out_file)
+
+        if conf_type is None:
+            conf_type = self.conf_type
+
+        if conf_type in ['yml', 'yaml']:
+            self._save_yaml(out_path)
+            return
+
+        if conf_type in ['json']:
+            self._save_json(out_path)
+            return
+
+        return
+
+    def update(self, key, val):
+        keys = [key]
+        kwargs = { key:val }
+        self.configs = ConfBuilder._dfs_update(self.configs, kwargs, keys)
+
+    def update_many(self, kwargs):
+        keys = set(kwargs.keys())
+        self.configs = ConfBuilder._dfs_update(self.configs, kwargs, keys)
+
+    def _save_yaml(self, out_path:Path):
+        from ruamel.yaml import YAML
+        yaml = YAML()
+        with open(out_path, 'w') as fw:
+            yaml.dump(self.configs, fw)
+
+    def _save_json(self, out_path:Path):
+        with open(out_path, 'w') as fw:
+            json.dump(self.configs, fw)
+
+    def _read_yaml(self):
+        from ruamel.yaml import YAML
+        yaml = YAML(typ='safe')
+        self.configs = yaml.load(self.conf_file)
+
+    def _read_json(self):
+        with open(self.conf_file, 'r') as fr:
+            self.configs = json.load(fr)
+
+    @staticmethod
+    def remove_nones(configs):
+        trimmed = copy.deepcopy(configs)
+        for key in configs.keys():
+            val = configs[key]
+            if type(val) is dict and len(val) != 0:
+                trimmed[key] = ConfBuilder.remove_nones(val)
+            val = trimmed[key]
+            if type(val) is dict or type(val) is list:
+                if len(val) == 0:
+                    del trimmed[key]
+            else:
+                if val is None:
+                    del trimmed[key]
+        return trimmed
+    
+    @staticmethod
+    def _dfs_update(configs, kwargs, keys):
+        for key in configs.keys():
+            if key in keys:
+                configs[key] = kwargs[key]
+            elif type(configs[key]) is dict:
+                configs[key] = ConfBuilder._dfs_update(configs[key], kwargs, keys)
+
+            # if type(configs[key]) is dict:
+            #     configs[key] = _dfs_update(configs[key], kwargs, keys)
+            # elif key in keys:
+            #     if type(configs[key]) is dict:
+            #         configs[key] = _dfs_update(configs[key], kwargs, keys)
+            #     else:
+            #         configs[key] = kwargs[key]
+        return configs
+        
 
 class FileReader(object):
     def __init__(self, filepaths:List[Path], segmented=True):

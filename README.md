@@ -116,7 +116,10 @@ Examples:
         ./fetch-datasets.sh deu-eng
     ```
 
-4. Setup paths in base config file. These paths are relative to `$repo_root\src`
+4. Run the `generate-base-configs` script to create language pair specific base config files and set the dataset and test parameters.
+    ```
+        ./generate-base-configs.sh --lang_pair deu-eng
+    ```
 
 5. Setup parameters in `run-factorizer.sh`.
 6. `chmod +x run-factorizer.sh`

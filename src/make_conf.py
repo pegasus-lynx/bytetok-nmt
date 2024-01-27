@@ -1,15 +1,10 @@
 import argparse
 import os
 import copy
-from json import load
 
 import re
 from pathlib import Path 
-import collections as coll
 from typing import List, Dict, Tuple
-
-from nlcodec import Type
-from rtg.data.dataset import TSVData, SqliteFile
 
 from lib.misc import read_conf, make_dir, make_file, write_conf
 
