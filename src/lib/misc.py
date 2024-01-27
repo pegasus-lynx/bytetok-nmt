@@ -11,6 +11,19 @@ from nlcodec.utils import IO as IO_nlcodec
 # Defining commonly used types
 Filepath = Union[Path,str]
 
+def convert_kwarg(value):
+    if value == '':
+        return None
+    if value in ['True', 'true']:
+        return True
+    if value in ['False', 'false']:
+        return False
+    if re.fullmatch("-?\d+", value):
+        return int(value)
+    if re.fullmatch("-?\d+\.\d*", value):
+        return float(value)
+    return value
+
 def log(text, ntabs=0):
     print(f"{'    '*ntabs} > {text}")
 

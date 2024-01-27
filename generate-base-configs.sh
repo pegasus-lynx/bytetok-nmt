@@ -46,6 +46,7 @@ help() {
     echo
 }
 
+repo_root=$(realpath $REPO_ROOT)
 dataset_dir=$(realpath $DATASET_DIR)
 configs_dir=$(realpath $CONFIGS_DIR)
 base_conf=$configs_dir/base/base.conf.yml
@@ -109,7 +110,7 @@ mkdir -p $conf_dir
 echo "Data Dir : $data_dir"
 echo "Config Dir : $conf_dir"
 
-pushd ./src > /dev/null
+pushd $repo_root > /dev/null
 
 if [[ ! -f $conf_dir/base.prep.yml ]]
 then

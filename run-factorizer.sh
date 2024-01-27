@@ -72,7 +72,7 @@ else
 fi
 
 # 2. Prepare the data
-python -m prepare-exp -w $exp_dir -c "${exp_dir}/prep.yml"
+python -m prepare_exp -w $exp_dir -c "${exp_dir}/prep.yml"
 
 # 3. For baselines only conf.yml is needed.
 if [ $shared -eq 1 ]; then

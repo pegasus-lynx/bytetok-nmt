@@ -6,7 +6,7 @@ import re
 from pathlib import Path 
 from typing import List, Dict, Tuple
 
-from lib.misc import make_dir, make_file
+from lib.misc import make_dir
 from lib.misc import ConfBuilder
 
 def generate_data_kwargs(dataset_dir, src_lang, tgt_lang):

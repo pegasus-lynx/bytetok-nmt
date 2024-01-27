@@ -6,20 +6,7 @@ import re
 from pathlib import Path 
 from typing import List, Dict, Tuple
 
-from lib.misc import read_conf, make_dir, make_file, write_conf
-
-def convert_type(value):
-    if value == '':
-        return None
-    if value in ['True', 'true']:
-        return True
-    if value in ['False', 'false']:
-        return False
-    if re.fullmatch("-?\d+", value):
-        return int(value)
-    if re.fullmatch("-?\d+\.\d*", value):
-        return float(value)
-    return value
+from lib.misc import read_conf, make_dir, write_conf, convert_kwarg
 
 
 # create a args2dict_action class
@@ -33,9 +20,9 @@ class args2dict_action(argparse.Action):
             # split it into key and value
             key, value = value.split('=')
             if ',' in value:
-                value = [convert_type(x) for x in value.split(',')]
+                value = [convert_kwarg(x) for x in value.split(',')]
             else:
-                value = convert_type(value)
+                value = convert_kwarg(value)
 
             # assign into dictionary
             getattr(namespace, self.dest)[key] = value

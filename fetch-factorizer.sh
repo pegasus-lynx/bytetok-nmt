@@ -44,8 +44,7 @@ fi
 if [ "$1" == "-p" ]
 then
     download_dir=$(realpath $2)
-    shift
-    shift
+    shift 2
 fi
 
 if [[ ! -d $download_dir ]]

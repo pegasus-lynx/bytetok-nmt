@@ -40,7 +40,7 @@ python -m make_conf -n prep.yml -w $exp_dir -c $base_prep_file -r $repo_root \
                 src_factorizer=$src_factorizer tgt_factorizer=$tgt_factorizer
 
 # 2. Prepare the data
-# python -m prepare-exp -w $exp_dir -c "${exp_dir}/prep.yml"
+# python -m prepare_exp -w $exp_dir -c "${exp_dir}/prep.yml"
 
 # 3. For baselines only conf.yml is needed.
 python -m make_conf -n conf.yml -w $exp_dir -c $base_conf_file -r $repo_root \
