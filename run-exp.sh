@@ -212,7 +212,7 @@ parseargs() {
 }
 
 #################   SCRIPT START   #####################
-pieces_options=("char" "word" "bpe" "factorizer" "factorizer266")
+pieces_options=("char" "word" "bpe" "byte" "factorizer" "factorizer266")
 
 # Initialize Variables
 initvars
