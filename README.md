@@ -52,7 +52,7 @@ Run `chmod +x *.sh` to enable execution for shell scripts before executing the f
     ```
 5. Decode results of training
    ```
-    TBD
+    ./run-tests.sh --cuda_device 0 --exp_name fac266-bpe4k --lang_pair eng-deu
    ```
 
 #### Repo layout and results for above
@@ -333,3 +333,53 @@ Options:
 - `run-fac-enc.sh` : This is the parameterized version of `run-factorizer-enc` script. **NOT TESTED**
 - `run-factorizer-enc.sh` : This is the script that we have been using earlier. This requires modifying the parameters in the script itself before running. This script is the one still used in tag version `bytetok-v1.*`
 - `run-factorizer.sh` : This does not work
+
+
+### Decoding Tests and Getting Scores
+
+We have `run-tests.sh` script that takes in same parameters as the run-exp script and gets the output from the trained model
+
+```
+./run-tests.sh -h
+
+run-tests : Runs test and gets score for the trained experiments
+
+Syntax: run-tests [OPTIONS]
+Options:
+  -h                          Print this Help.
+
+  --repo_root <value>         Path to bytetok-nmt repos src directory
+                              DEFAULT : ./src
+
+  --exp_coll <value>          Path to the directory where you want to store
+                                  different variations of all the experiments.
+                              DEFAULT = ./exps
+
+  --factorizer_dir <value>    Path to the directory where you want to store
+                                  different variations of all the experiments.
+                              DEFAULT = ./factorizer-models
+
+  --configs_dir <value>       Path to the directory where you want to store
+                                  different variations of all the experiments.
+                              DEFAULT = ./configs
+
+  --exp_name <value>          Name of the experiment. We will create a directory
+                                  exp_coll/exp_name where we will store
+                                  the experiment vocab, configs, results.
+                              REQUIRED
+
+  --lang_pair l1-l2           Language pair for downloading the datasets.
+                              This uses mtdata for downloading the datasets, however
+                                  that requires some confgurations.
+                              Here is a list of pairs with preconfigured options :
+                                  deu-eng, eng-deu
+
+  --cuda_device <value>       CUDA device to be used for training
+                              DEFAULT : 0
+                              VALUES : [ -1, 0, 1, 2, ... ]
+                                  -1 means no cuda_device is present
+
+ Examples :
+      .\run-tests.sh --exp_name fac266-bpe8k --lang_pair eng-deu \
+          --cuda_device 0
+```

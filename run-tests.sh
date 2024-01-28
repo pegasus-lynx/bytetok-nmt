@@ -13,9 +13,9 @@ initvars() {
 
 help() {
     echo
-    echo "run-fac-enc : Run NMT experiment with Factorizer encoders"
+    echo "run-tests : Runs test and gets score for the trained experiments"
     echo
-    echo "Syntax: run-fac-enc [OPTIONS]"
+    echo "Syntax: run-tests [OPTIONS]"
     echo "Options:"
     echo "  -h                          Print this Help."
     echo
@@ -64,7 +64,7 @@ parseargs() {
         exit 1;
     fi
 
-    exp_dir="${exp_coll}/${exp_name}"
+    exp_dir="${exp_coll}/${lang_pair}/${exp_name}"
     data_dir=$dataset_dir/$lang_pair
 }
 
