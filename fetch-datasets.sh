@@ -4,6 +4,23 @@ source ./repo_setup.env
 # Exit on first failure
 set -e
 
+sacremoses_code() {
+    local lang=$1
+    local code=""
+    case $lang in
+        eng)
+            code="en" ;;
+        deu)
+            code="de" ;;
+        ara)
+            code="ar" ;;
+        fra)
+            code="fr" ;;
+    esac
+    echo $code
+}
+
+
 help() {
     echo
     echo "fetch-datasets : Downloads the factorizer models"
@@ -17,7 +34,7 @@ help() {
     echo "                     DEFAULT - ./datasets"
     echo "                     The default value is loaded from repo_setup.env file"
     echo
-    echo "  l1-l2              Language pair for downloading the datasets."
+    echo "  --lang_pair l1-l2 Language pair for downloading the datasets."
     echo "                     This uses mtdata for downloading the datasets, however"
     echo "                          that requires some confgurations."
     echo "                     Here is a list of pairs with preconfigured options :"
@@ -54,56 +71,57 @@ do
             fi
             src=$(echo $lang_pair | cut -d '-' -f 1)
             tgt=$(echo $lang_pair | cut -d '-' -f 2)
+            rev_lang_pair="${tgt}-${src}"
             shift 2
+            ;;
+        *)
+            echo "Unexpected parameter $1"
+            exit 1;
             ;;
     esac
 done
 
 if [[ ! -d $download_dir ]]
 then
+    echo "mkdir : $download_dir"
     mkdir -p $download_dir
 fi
 
-case $langpair in
+case $lang_pair in
     deu-eng|eng-deu)
+
         dataset_dir="${download_dir}/deu-eng"
+        toks_dir="${dataset_dir}/toks"
 
         if [[ -f "${dataset_dir}/mtdata.signature.txt" ]]
         then
-            echo "$langpair dataset is already present"
+            echo "$lang_pair dataset is already present"
         else
             mtdata get -l deu-eng --out $dataset_dir --merge --train Statmt-europarl-10-deu-eng Statmt-news_commentary-16-deu-eng --dev Statmt-newstest_deen-2017-deu-eng  --test Statmt-newstest_deen-20{18,19,20}-deu-eng
+            ln -s $dataset_dir $download_dir/$rev_lang_pair 
         fi
-
-        for f in $dataset_dir/*.deu; do 
-            if [[ -f $f.tok ]]
-            then
-                echo "Already Tokenized : $f"
-                continue
-            fi
-            echo "$f -> $f.tok"; 
-            sacremoses -l de -j 4 tokenize -x -a < $f > $f.tok; 
-        done
-
-        for f in $dataset_dir/*.eng; do 
-            if [[ -f $f.tok ]]
-            then
-                echo "Already Tokenized : $f"
-                continue
-            fi
-            echo "$f -> $f.tok"; 
-            sacremoses -l en -j 4 tokenize -x -a < $f > $f.tok; 
-        done
-
-        if [[ ! -d $dataset_dir/toks ]]
-        then
-            mkdir $dataset_dir/toks
-        fi
-        mv $dataset_dir/*.tok $dataset_dir/toks
         ;;
     *)
-        echo "$langpair not supported."
+        echo "$lang_pair not supported."
         echo
         exit 1
         ;;
 esac
+
+langs=($src $tgt)
+
+for l in ${langs[@]}; do
+    for f in $dataset_dir/*.$l; do
+        if [[ -f $f.tok ]]
+        then
+            echo "Already Tokenized : $f"
+            continue
+        fi
+        echo "$f -> $f.tok"; 
+        lcode=$(sacremoses_code $l)
+        sacremoses -l $lcode -j 4 tokenize -x -a < $f > $f.tok; 
+    done
+done
+
+mkdir -p $toks_dir
+mv $dataset_dir/*.tok $toks_dir

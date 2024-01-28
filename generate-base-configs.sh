@@ -91,21 +91,22 @@ do
     esac
 done
 
-data_dir=""
+data_dir=$(realpath $dataset_dir/$lang_pair)
 
-if ls $dataset_dir | grep -q -F -w "${src}-${tgt}"
+if [[ ! -d $data_dir ]]
 then
-    data_dir="${dataset_dir}/${src}-${tgt}"
-elif ls $dataset_dir | grep -q -F -w "${tgt}-${src}"
-then
-    data_dir="${dataset_dir}/${tgt}-${src}"
-else
-    echo "Data dir is not present. Download the dataset first."
+    echo "Data dir does not exist"
+    echo
     exit 1
 fi
 
-conf_dir="${configs_dir}/${lang_pair}"
-conf_dir=$(realpath $conf_dir)
+if [[ -d $configs_dir ]]
+then
+    mkdir -p $configs_dir
+fi
+
+configs_dir=$(realpath $configs_dir)
+conf_dir=$configs_dir/$lang_pair
 mkdir -p $conf_dir
 
 echo "Data Dir : $data_dir"

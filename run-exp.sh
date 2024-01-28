@@ -195,7 +195,6 @@ parseargs() {
 
     if [[ $src_pieces == factor* ]]
     then
-        echo "src_pieces : ${src_pieces}"
         get_factorizer $src
         get_vcb_size $src_pieces
         src_factorizer="${factorizer_dir}/${_factorizer}"
@@ -204,7 +203,6 @@ parseargs() {
 
     if [[ $tgt_pieces == factor.* ]]
     then
-        echo "tgt_pieces : ${tgt_pieces}"
         get_factorizer $tgt
         get_vcb_size $tgt_pieces
         tgt_factorizer="${factorizer_dir}/${_factorizer}"
