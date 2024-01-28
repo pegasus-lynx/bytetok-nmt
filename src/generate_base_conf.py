@@ -16,6 +16,8 @@ def generate_data_kwargs(dataset_dir, src_lang, tgt_lang):
     data_kwargs = dict()
     for datakey in ['train_src', 'train_tgt', 'valid_src', 'valid_tgt']:
         parts = datakey.split('_')
+        if parts[0] == 'valid':
+            parts[0] = 'dev'
         lang = src_lang if parts[1] == 'src' else tgt_lang
         pth = tok_dir / Path('./{}.{}.tok'.format(parts[0], lang))
         data_kwargs[datakey] = str(pth.resolve())

@@ -167,3 +167,5 @@ cython_debug/
 /datasets/*
 /factorizer-models/*
 /exps/*
+/configs/*
+!/configs/base/*

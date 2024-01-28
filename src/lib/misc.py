@@ -1,5 +1,6 @@
 import gzip
 import json
+import re
 
 import shutil
 from datetime import datetime

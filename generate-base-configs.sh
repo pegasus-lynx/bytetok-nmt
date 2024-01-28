@@ -6,9 +6,9 @@ set -e
 
 help() {
     echo
-    echo "fetch-datasets : Downloads the factorizer models"
+    echo "generate-base-configs : Generates base config files for "
     echo
-    echo "Syntax: fetch-datasets [OPTIONS] l1-l2"
+    echo "Syntax: generate-base-configs [OPTIONS] l1-l2"
     echo
     echo "Options:"
     echo "  -h                      Print this Help."
@@ -41,16 +41,17 @@ help() {
     echo "                          If there is any other name or wrong argument passed, it is ignored"
     echo
     echo "Examples:"
-    echo " ./generate-base-configs.sh deu-eng"
-    echo " ./generate-base-configs.sh -p ./data deu-eng"
+    echo " ./generate-base-configs.sh --lang_pair deu-eng"
+    echo " ./generate-base-configs.sh -p ./data --lang_pair deu-eng"
     echo
 }
 
 repo_root=$(realpath $REPO_ROOT)
 dataset_dir=$(realpath $DATASET_DIR)
 configs_dir=$(realpath $CONFIGS_DIR)
-base_conf=$configs_dir/base/base.conf.yml
-base_prep=$configs_dir/base/base.prep.yml
+
+base_conf=$(realpath $repo_root/../configs/base/base.conf.yml)
+base_prep=$(realpath $repo_root/../configs/base/base.prep.yml)
 lang_pair=""
 
 while [[ $# -gt 0 ]]
@@ -112,20 +113,14 @@ echo "Config Dir : $conf_dir"
 
 pushd $repo_root > /dev/null
 
-if [[ ! -f $conf_dir/base.prep.yml ]]
-then
-    echo "Preparing prep.yml ..."
-    python -m generate_base_conf -d $data_dir \
-            -c $conf_dir -n base.prep.yml \
-            -b $base_prep -s $src -t $tgt
-fi
+echo "Preparing prep.yml ..."
+python -m generate_base_conf -d $data_dir \
+        -c $conf_dir -n base.prep.yml \
+        -b $base_prep -s $src -t $tgt
 
-if [[ ! -f $conf_dir/base.conf.yml ]]
-then
-    echo "Preparing conf.yml ..."
-    python -m generate_base_conf -d $data_dir \
-            -c $conf_dir -n base.conf.yml \
-            -b $base_conf -s $src -t $tgt
-fi
+echo "Preparing conf.yml ..."
+python -m generate_base_conf -d $data_dir \
+        -c $conf_dir -n base.conf.yml \
+        -b $base_conf -s $src -t $tgt
 
 popd > /dev/null

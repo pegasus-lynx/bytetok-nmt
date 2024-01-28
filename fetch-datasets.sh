@@ -31,34 +31,38 @@ help() {
 }
 
 download_dir=$(realpath $DATASET_DIR)
+lang_pair=""
 
-if [ "$1" == "-h" ]
-then
-    help
-    exit 0;
-fi
-
-if [ "$1" == "-p" ]
-then
-    download_dir=$(realpath $2)
-    shift
-    shift
-fi
+while [[ $# -gt 0 ]]
+do
+    key=$1
+    case $key in
+        -h)
+            help
+            exit 0
+            ;;
+        -p)
+            download_dir=$(realpath $2)
+            shift 2
+            ;;
+        --lang_pair)
+            lang_pair=$2
+            if [ -z $lang_pair ]
+            then
+                echo "lang_pair cannot be empty"
+                exit 1;
+            fi
+            src=$(echo $lang_pair | cut -d '-' -f 1)
+            tgt=$(echo $lang_pair | cut -d '-' -f 2)
+            shift 2
+            ;;
+    esac
+done
 
 if [[ ! -d $download_dir ]]
 then
     mkdir -p $download_dir
 fi
-
-if [[ $# -eq 0 ]]
-then
-    echo "No lang pair provided"
-    echo
-    exit 1;
-fi
-
-langpair="$1"
-shift
 
 case $langpair in
     deu-eng|eng-deu)
