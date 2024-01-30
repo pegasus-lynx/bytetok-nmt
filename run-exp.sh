@@ -201,7 +201,7 @@ parseargs() {
         src_vcb_size=$_vcb_size
     fi
 
-    if [[ $tgt_pieces == factor.* ]]
+    if [[ $tgt_pieces == factor* ]]
     then
         get_factorizer $tgt
         get_vcb_size $tgt_pieces
@@ -282,6 +282,8 @@ done
 
 # Verify and compute language specific args
 parseargs
+
+printvars
 
 # Create exp_dir
 if [[ ! -d $exp_dir ]]

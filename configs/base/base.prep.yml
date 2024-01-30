@@ -12,4 +12,4 @@ max_tgt_types: 8000
 src_pieces: factorizer
 tgt_pieces: bpe
 src_factorizer: ../factorizer-models/english.dawg
-# tgt_factorizer: .
+tgt_factorizer: .
