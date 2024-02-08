@@ -15,6 +15,7 @@ help() {
     echo
     echo "run-tests : Runs test and gets score for the trained experiments"
     echo
+    echo "This script assumes that the test sc"
     echo "Syntax: run-tests [OPTIONS]"
     echo "Options:"
     echo "  -h                          Print this Help."
@@ -164,7 +165,15 @@ then
     exit 1
 fi
 
-results_dir="${exp_dir}/results"
+tok_dir="${data_dir}/toks"
+if [[ ! -d $tok_dir ]]
+then
+    echo "Tok dir does not exist"
+    echo
+    exit 1
+fi
+
+results_dir="${exp_dir}/results-tok"
 
 if [[ ! -d $results_dir ]]
 then
@@ -173,12 +182,12 @@ fi
 
 pushd $repo_root > /dev/null
 
-for f in $data_dir/test*.$src; do
+for f in $tok_dir/test*.$src.tok; do
     fname=$(basename $f)
     fbase=$(echo $fname | cut -d '.' -f 1)
     fstem=$(echo $fbase | cut -d '-' -f 1)
 
-    inp_file="${data_dir}/${fbase}.${src}"
+    inp_file="${tok_dir}/${fbase}.${src}.tok"
     ref_file="${data_dir}/${fstem}.${tgt}"
     out_file="${results_dir}/${fbase}.out.tsv"
     detok_file="${results_dir}/${fbase}.detok"

@@ -16,6 +16,8 @@ sacremoses_code() {
             code="ar" ;;
         fra)
             code="fr" ;;
+        zho)
+            code="zh" ;;
     esac
     echo $code
 }

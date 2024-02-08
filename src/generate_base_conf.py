@@ -9,6 +9,9 @@ from typing import List, Dict, Tuple
 from lib.misc import make_dir
 from lib.misc import ConfBuilder
 
+lang_codes = { 'eng':'en', 'deu':'de', 'ara':'ar', 'fra':'fr', 'zho':'zh'}
+
+
 def generate_data_kwargs(dataset_dir, src_lang, tgt_lang):
     
     tok_dir = dataset_dir / 'toks'
@@ -28,8 +31,11 @@ def generate_data_kwargs(dataset_dir, src_lang, tgt_lang):
         data_kwargs['suit'][key] = [str(file.resolve())]
 
     for key in data_kwargs['suit'].keys():
-        ref_file = dataset_dir / Path('{}.{}'.format(key,tgt_lang))
+        fstem = key.split('-')[0]
+        ref_file = dataset_dir / Path('{}.{}'.format(fstem,tgt_lang))
         data_kwargs['suit'][key].append(str(ref_file.resolve()))
+
+    data_kwargs['detokenizer'] = f"cut -f1 | sed 's/<unk>//g' | sacremoses -l {lang_codes[tgt_lang]} detokenize"
 
     return data_kwargs
 
