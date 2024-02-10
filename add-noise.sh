@@ -48,7 +48,7 @@ do
             exit 0
             ;;
         --in)
-            in_file=$(realpath $2)
+            in_file=$2
             shift 2
             ;;
         --out)
@@ -75,16 +75,25 @@ do
     esac
 done
 
-pushd $repo_root > /dev/null
+infile_dir=$(dirname $in_file)
+infile_base=$(basename $in_file)
+infile_stem=$(echo $infile_base | cut -d '.' -f 1)
+
+in_file=$(realpath $in_file)
 
 if [[ -z $outfile_name ]]; then
-    echo "Empty outfile"
-    python -m add_noise -f $in_file \
-        -l $lang -p $pnoise -s $seed
-else
-    echo "Non empty outfile"
-    python -m add_noise -f $in_file -o $outfile_name \
-        -l $lang -p $pnoise -s $seed
+    outfile_stem=$infile_stem-p$pnoise-s$seed
+    outfile_name=${infile_base/$infile_stem/$outfile_stem}
+    outfile_path=$infile_dir/$outfile_name
 fi
+
+outfile_path=$infile_dir/$outfile_name
+outfile_path=$(realpath -m $outfile_path)
+echo $outfile_path
+
+pushd $repo_root > /dev/null
+
+python -m add_noise -f $in_file -o $outfile_path \
+    -l $lang -p $pnoise -s $seed
 
 popd > /dev/null

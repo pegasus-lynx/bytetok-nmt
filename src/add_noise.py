@@ -86,7 +86,7 @@ def parse_args():
                 description="Adds noise to the data file")
     parser.add_argument('-f', '--in_file', type=Path, 
                             help='Path to the data file')
-    parser.add_argument('-o', '--outfile_name', type=str, default="", help="Name of the output file")
+    parser.add_argument('-o', '--outfile_path', type=Path, default="", help="Path of the output file")
     parser.add_argument('-l', '--lang', type=Path, 
                             help='Language of the data in the file')
     parser.add_argument('-s', '--seed', type=int,
@@ -133,16 +133,18 @@ def main():
                     count = 0
             noisy_lines.append(noisy_line)
 
-    outfile_name = args.outfile_name
-    print("Outfile Name : ", outfile_name)
-    if outfile_name == "":
-        name_parts = args.in_file.name.split('.')
-        name_parts[0] = name_parts[0] + f"-p{args.pnoise}-s{args.seed}"
-        outfile_name = ".".join(name_parts)
+    # outfile_name = args.outfile_name
+    # print("Outfile Name : ", outfile_name)
+    # if outfile_name == "":
+    #     print("In File : ", args.in_file)
+    #     name_parts = args.in_file.name.split('.')
+    #     name_parts[0] = name_parts[0] + f"-p{args.pnoise}-s{args.seed}"
+    #     outfile_name = ".".join(name_parts)
+    # print("Outfile Name : ", outfile_name)
     
-    out_file = args.in_file.with_name(outfile_name)
+    # out_file = args.in_file.with_name(outfile_name)
     
-    IO.write_lines(out_file, noisy_lines)
+    IO.write_lines(args.outfile_path, noisy_lines)
 
 
 if __name__ == "__main__":

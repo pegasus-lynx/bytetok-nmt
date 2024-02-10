@@ -43,6 +43,8 @@ help() {
     echo "                          deu-eng, eng-deu"
     echo "                     If there is any other name or wrong argument passed, it is ignored"
     echo
+    echo "  --only_tok         Only tokenize the dataset"   
+    echo    
     echo "Examples:"
     echo " ./fetch-datasets.sh deu-eng"
     echo " ./fetch-datasets.sh -p ./data deu-eng"
@@ -76,6 +78,10 @@ do
             rev_lang_pair="${tgt}-${src}"
             shift 2
             ;;
+        --only_tok)
+            only_tok=1
+            shift
+            ;;
         *)
             echo "Unexpected parameter $1"
             exit 1;
@@ -95,12 +101,15 @@ case $lang_pair in
         dataset_dir="${download_dir}/deu-eng"
         toks_dir="${dataset_dir}/toks"
 
-        if [[ -f "${dataset_dir}/mtdata.signature.txt" ]]
-        then
-            echo "$lang_pair dataset is already present"
-        else
-            mtdata get -l deu-eng --out $dataset_dir --merge --train Statmt-europarl-10-deu-eng Statmt-news_commentary-16-deu-eng --dev Statmt-newstest_deen-2017-deu-eng  --test Statmt-newstest_deen-20{18,19,20}-deu-eng
-            ln -s $dataset_dir $download_dir/$rev_lang_pair 
+        if [ $only_tok -eq 0 ]; then
+            echo "Downloading dataset"
+            if [[ -f "${dataset_dir}/mtdata.signature.txt" ]]
+            then
+                echo "$lang_pair dataset is already present"
+            else
+                mtdata get -l deu-eng --out $dataset_dir --merge --train Statmt-europarl-10-deu-eng Statmt-news_commentary-16-deu-eng --dev Statmt-newstest_deen-2017-deu-eng  --test Statmt-newstest_deen-20{18,19,20}-deu-eng
+                ln -s $dataset_dir $download_dir/$rev_lang_pair 
+            fi
         fi
         ;;
     *)
@@ -114,7 +123,8 @@ langs=($src $tgt)
 
 for l in ${langs[@]}; do
     for f in $dataset_dir/*.$l; do
-        if [[ -f $f.tok ]]
+        fbase=$(basename $f)
+        if [ -f $f.tok ] || [ -f $toks_dir/$fbase.tok ]
         then
             echo "Already Tokenized : $f"
             continue
