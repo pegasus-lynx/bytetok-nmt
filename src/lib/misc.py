@@ -322,13 +322,14 @@ class IO:
             yield from cls.get_lines(path, **kwargs)
 
     @classmethod
-    def write_lines(cls, path: Path, text):
+    def write_lines(cls, path: Path, text, addnewline:bool = False):
         if isinstance(text, str):
             text = [text]
         with cls.writer(path) as out:
             for line in text:
                 out.write(line)
-                out.write('\n')
+                if addnewline:
+                    out.write('\n')
 
     @classmethod
     def copy_file(cls, src: Path, dest: Path, follow_symlinks=True):
